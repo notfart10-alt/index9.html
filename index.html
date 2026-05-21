@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flygradar Sweden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .nav-btn { transition: all 0.2s; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+
+    <!-- Inloggning -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+        <div class="bg-zinc-900 p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-emerald-400">Flygradar Sweden</h1>
+                <p class="text-zinc-400 mt-2">Modern flygövervakning</p>
+            </div>
+
+            <div class="flex gap-3 mb-8">
+                <button onclick="showLogin()" id="btnLogin" class="flex-1 py-4 rounded-2xl font-medium bg-emerald-500 text-black">Logga in</button>
+                <button onclick="showRegister()" id="btnRegister" class="flex-1 py-4 rounded-2xl font-medium border border-zinc-700">Skapa konto</button>
+            </div>
+
+            <div id="loginForm">
+                <input type="text" id="loginUser" placeholder="Användarnamn" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="password" id="loginPass" placeholder="Lösenord" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+                <button onclick="login()" class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold">Logga in</button>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <input type="email" id="regEmail" placeholder="Emailadress" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="text" id="regUser" placeholder="Användarnamn" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="password" id="regPass" placeholder="Lösenord" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+                <button onclick="register()" class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold">Skapa konto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Huvudapp -->
+    <div id="mainApp" class="hidden flex flex-col h-screen">
+        <header class="bg-zinc-900 border-b border-zinc-700 px-6 py-4">
+            <h1 class="text-2xl font-bold text-emerald-400">Flygradar Sweden</h1>
+        </header>
+
+        <div class="flex flex-1 overflow-hidden">
+            <div class="w-72 bg-zinc-900 border-r border-zinc-700 p-4 space-y-2">
+                <button onclick="showPage('hem')" class="nav-btn active w-full text-left px-5 py-3 rounded-2xl hover:bg-zinc-800">Hem</button>
+                <button onclick="showPage('karta')" class="nav-btn w-full text-left px-5 py-3 rounded-2xl hover:bg-zinc-800">Karta</button>
+                <button onclick="showPage('arrdep')" class="nav-btn w-full text-left px-5 py-3 rounded-2xl hover:bg-zinc-800">Avgångar & Ankomster</button>
+                <button onclick="showPage('atc')" class="nav-btn w-full text-left px-5 py-3 rounded-2xl hover:bg-zinc-800">ATC Radio</button>
+                <button onclick="showPage('installningar')" class="nav-btn w-full text-left px-5 py-3 rounded-2xl hover:bg-zinc-800">Inställningar</button>
+                <button onclick="logout()" class="nav-btn w-full text-left px-5 py-3 rounded-2xl hover:bg-red-950 text-red-400 mt-8">Logga ut</button>
+            </div>
+
+            <div class="flex-1 p-8 overflow-auto">
+                <div id="hem" class="page">
+                    <h2 class="text-3xl font-bold mb-4">Välkommen tillbaka</h2>
+                    <p class="text-zinc-400">Din personliga svenska flygportal.</p>
+                </div>
+
+                <div id="karta" class="page hidden">
+                    <h2 class="text-3xl font-bold mb-4">Live Karta</h2>
+                    <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh] border border-zinc-700"></iframe>
+                </div>
+
+                <div id="arrdep" class="page hidden">
+                    <h2 class="text-3xl font-bold mb-6">Avgångar & Ankomster</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="https://www.flightaware.com/live/airport/ESSA" target="_blank" class="block bg-zinc-900 hover:bg-zinc-800 p-6 rounded-3xl transition-all">
+                            <h3 class="text-xl font-semibold">Stockholm Arlanda (ESSA)</h3>
+                            <p class="text-emerald-400 mt-3">Öppna avgångar & ankomster →</p>
+                        </a>
+                        <a href="https://www.flightaware.com/live/airport/ESGG" target="_blank" class="block bg-zinc-900 hover:bg-zinc-800 p-6 rounded-3xl transition-all">
+                            <h3 class="text-xl font-semibold">Göteborg Landvetter (ESGG)</h3>
+                            <p class="text-emerald-400 mt-3">Öppna avgångar & ankomster →</p>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="atc" class="page hidden">
+                    <h2 class="text-3xl font-bold mb-4">ATC Radio - ESOE Örebro</h2>
+                    <div class="bg-zinc-900 p-6 rounded-3xl max-w-lg">
+                        <p class="mb-4"><strong>120.275 MHz</strong> — Tower / Approach</p>
+                        <audio controls class="w-full">
+                            <source src="https://livestream.liveatc.net/ESOE" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div id="installningar" class="page hidden">
+                    <h2 class="text-3xl font-bold mb-6">Inställningar</h2>
+                    <div class="max-w-xl space-y-8">
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-3">Kartkälla</h3>
+                            <select id="mapSelect" onchange="changeMap()" class="w-full p-4 bg-zinc-800 rounded-2xl">
+                                <option value="https://globe.adsbexchange.com/">ADS-B Exchange</option>
+                                <option value="https://www.adsb.fi/">ADS-B.fi</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function showLogin() {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+    }
+
+    function showRegister() {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.remove('hidden');
+    }
+
+    function register() {
+        const user = document.getElementById('regUser').value.trim();
+        const pass = document.getElementById('regPass').value.trim();
+        if (!user || !pass) return alert("Användarnamn och lösenord krävs");
+        localStorage.setItem('fr_user', user);
+        localStorage.setItem('fr_pass', pass);
+        alert("Konto skapat!");
+        showLogin();
+    }
+
+    function login() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        if (user === localStorage.getItem('fr_user') && pass === localStorage.getItem('fr_pass')) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            showPage('hem');
+        } else {
+            alert("Fel användarnamn eller lösenord");
+        }
+    }
+
+    function logout() {
+        document.getElementById('mainApp').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById(page).classList.remove('hidden');
+    }
+
+    function changeMap() {
+        document.getElementById('mapFrame').src = document.getElementById('mapSelect').value;
+    }
+
+    showLogin();
+</script>
+
+</body>
+</html>
