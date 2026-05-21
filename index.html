@@ -8,9 +8,10 @@
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
         .nav-btn { transition: all 0.2s; }
+        iframe { border-radius: 12px; border: 1px solid #27272a; }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+<body class="bg-zinc-950 text-zinc-100" data-theme="emerald">
 
     <!-- Inloggning -->
     <div id="loginScreen" class="min-h-screen flex items-center justify-center">
@@ -64,21 +65,27 @@
 
                 <div id="karta" class="page hidden">
                     <h2 class="text-3xl font-bold mb-4">Live Karta</h2>
-                    <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh] border border-zinc-700"></iframe>
+                    <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh]"></iframe>
                 </div>
 
+                <!-- Avg & Dep med iframes -->
                 <div id="arrdep" class="page hidden">
                     <h2 class="text-3xl font-bold mb-6">Avgångar & Ankomster</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <a href="https://www.flightaware.com/live/airport/ESSA" target="_blank" class="block bg-zinc-900 hover:bg-zinc-800 p-6 rounded-3xl transition-all">
-                            <h3 class="text-xl font-semibold">Stockholm Arlanda (ESSA)</h3>
-                            <p class="text-emerald-400 mt-3">Öppna avgångar & ankomster →</p>
-                        </a>
-                        <a href="https://www.flightaware.com/live/airport/ESGG" target="_blank" class="block bg-zinc-900 hover:bg-zinc-800 p-6 rounded-3xl transition-all">
-                            <h3 class="text-xl font-semibold">Göteborg Landvetter (ESGG)</h3>
-                            <p class="text-emerald-400 mt-3">Öppna avgångar & ankomster →</p>
-                        </a>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-4">Stockholm Arlanda (ESSA)</h3>
+                            <iframe src="https://www.flightaware.com/live/airport/ESSA" class="w-full h-[520px]"></iframe>
+                        </div>
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-4">Göteborg Landvetter (ESGG)</h3>
+                            <iframe src="https://www.flightaware.com/live/airport/ESGG" class="w-full h-[520px]"></iframe>
+                        </div>
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-4">Örebro (ESOE)</h3>
+                            <iframe src="https://www.flightaware.com/live/airport/ESOE" class="w-full h-[520px]"></iframe>
+                        </div>
                     </div>
+                    <p class="text-sm text-zinc-500 mt-6">Om en iframe inte laddar → prova att öppna länken i ny flik.</p>
                 </div>
 
                 <div id="atc" class="page hidden">
@@ -98,8 +105,23 @@
                             <h3 class="text-xl mb-3">Kartkälla</h3>
                             <select id="mapSelect" onchange="changeMap()" class="w-full p-4 bg-zinc-800 rounded-2xl">
                                 <option value="https://globe.adsbexchange.com/">ADS-B Exchange</option>
-                                <option value="https://www.adsb.fi/">ADS-B.fi</option>
                             </select>
+                        </div>
+
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-3">Tema</h3>
+                            <select id="themeSelect" onchange="changeTheme()" class="w-full p-4 bg-zinc-800 rounded-2xl">
+                                <option value="emerald">Emerald (Standard)</option>
+                                <option value="blue">Blå</option>
+                                <option value="slate">Mörk Grå</option>
+                            </select>
+                        </div>
+
+                        <div class="bg-zinc-900 p-6 rounded-3xl">
+                            <h3 class="text-xl mb-3">Notifikationer</h3>
+                            <button onclick="requestNotifications()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-5 rounded-2xl font-medium">
+                                Aktivera notiser för militärflyg & specialflyg
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -112,7 +134,6 @@
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
     }
-
     function showRegister() {
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('registerForm').classList.remove('hidden');
@@ -152,6 +173,18 @@
 
     function changeMap() {
         document.getElementById('mapFrame').src = document.getElementById('mapSelect').value;
+    }
+
+    function changeTheme() {
+        const theme = document.getElementById('themeSelect').value;
+        document.documentElement.setAttribute('data-theme', theme);
+    }
+
+    function requestNotifications() {
+        if (!("Notification" in window)) return alert("Din webbläsare stödjer inte notiser.");
+        Notification.requestPermission().then(perm => {
+            if (perm === "granted") alert("✅ Notiser aktiverade!");
+        });
     }
 
     showLogin();
