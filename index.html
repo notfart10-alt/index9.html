@@ -68,24 +68,24 @@
                     <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh]"></iframe>
                 </div>
 
-                <!-- Avg & Dep med iframes -->
+                <!-- Avg & Dep -->
                 <div id="arrdep" class="page hidden">
                     <h2 class="text-3xl font-bold mb-6">Avgångar & Ankomster</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-zinc-900 p-6 rounded-3xl">
                             <h3 class="text-xl mb-4">Stockholm Arlanda (ESSA)</h3>
-                            <iframe src="https://www.flightaware.com/live/airport/ESSA" class="w-full h-[520px]"></iframe>
+                            <a href="https://www.flightaware.com/live/airport/ESSA" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
                         </div>
                         <div class="bg-zinc-900 p-6 rounded-3xl">
                             <h3 class="text-xl mb-4">Göteborg Landvetter (ESGG)</h3>
-                            <iframe src="https://www.flightaware.com/live/airport/ESGG" class="w-full h-[520px]"></iframe>
+                            <a href="https://www.flightaware.com/live/airport/ESGG" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
                         </div>
                         <div class="bg-zinc-900 p-6 rounded-3xl">
                             <h3 class="text-xl mb-4">Örebro (ESOE)</h3>
-                            <iframe src="https://www.flightaware.com/live/airport/ESOE" class="w-full h-[520px]"></iframe>
+                            <a href="https://www.flightaware.com/live/airport/ESOE" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
                         </div>
                     </div>
-                    <p class="text-sm text-zinc-500 mt-6">Om en iframe inte laddar → prova att öppna länken i ny flik.</p>
+                    <p class="text-zinc-500 mt-6">Många flygplatssidor blockerar inbäddning. Därför öppnas de i ny flik.</p>
                 </div>
 
                 <div id="atc" class="page hidden">
@@ -130,14 +130,8 @@
     </div>
 
 <script>
-    function showLogin() {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('registerForm').classList.add('hidden');
-    }
-    function showRegister() {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('registerForm').classList.remove('hidden');
-    }
+    function showLogin() { document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('registerForm').classList.add('hidden'); }
+    function showRegister() { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.remove('hidden'); }
 
     function register() {
         const user = document.getElementById('regUser').value.trim();
