@@ -68,14 +68,14 @@
                     <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh]"></iframe>
                 </div>
 
-                <!-- Avgångar & Ankomster med Iframes + Sök -->
+                <!-- Avgångar & Ankomster -->
                 <div id="arrdep" class="page hidden">
                     <h2 class="text-3xl font-bold mb-4">Avgångar & Ankomster</h2>
                     
                     <input type="text" id="airportSearch" 
                            onkeyup="filterAirports()" 
                            placeholder="Sök flygplats (Arlanda, ESSA, Örebro...)" 
-                           class="w-full p-4 bg-zinc-800 rounded-2xl mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                           class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
 
                     <div id="airportList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Fylls med JavaScript -->
@@ -98,9 +98,8 @@
                         <div class="bg-zinc-900 p-6 rounded-3xl">
                             <h3 class="text-xl mb-3">Kartkälla</h3>
                             <select id="mapSelect" onchange="changeMap()" class="w-full p-4 bg-zinc-800 rounded-2xl">
-                                <option value="https://globe.adsbexchange.com/">ADS-B Exchange</option>
-                                <option value="https://www.adsb.fi/">ADS-B.fi</option>
-                                <option value="https://live.skyvector.com/">SkyVector</option>
+                                <option value="https://globe.adsbexchange.com/">ADS-B Exchange (Rekommenderad)</option>
+                                <option value="https://live.skyvector.com/">SkyVector (Flygkartor)</option>
                             </select>
                         </div>
 
@@ -108,7 +107,7 @@
                             <h3 class="text-xl mb-3">Tema</h3>
                             <select id="themeSelect" onchange="changeTheme()" class="w-full p-4 bg-zinc-800 rounded-2xl">
                                 <option value="emerald">Emerald (Standard)</option>
-                                <option value="blue">Blå</option>
+                                <option value="blue">Blå Aviation</option>
                                 <option value="slate">Mörk Grå</option>
                             </select>
                         </div>
@@ -132,9 +131,7 @@
         { name: "Malmö Sturup", code: "ESMS", url: "https://www.flightaware.com/live/airport/ESMS" },
         { name: "Örebro", code: "ESOE", url: "https://www.flightaware.com/live/airport/ESOE" },
         { name: "Stockholm Skavsta", code: "ESKN", url: "https://www.flightaware.com/live/airport/ESKN" },
-        { name: "Stockholm Bromma", code: "ESSB", url: "https://www.flightaware.com/live/airport/ESSB" },
-        { name: "Umeå", code: "ESNU", url: "https://www.flightaware.com/live/airport/ESNU" },
-        { name: "Luleå", code: "ESPA", url: "https://www.flightaware.com/live/airport/ESPA" }
+        { name: "Stockholm Bromma", code: "ESSB", url: "https://www.flightaware.com/live/airport/ESSB" }
     ];
 
     function renderAirports(filtered) {
@@ -147,6 +144,7 @@
             card.innerHTML = `
                 <h3 class="text-xl font-semibold mb-4">${ap.name} (${ap.code})</h3>
                 <iframe src="${ap.url}" class="w-full"></iframe>
+                <p class="text-xs text-zinc-500 mt-2">Om iframe inte laddar → <a href="${ap.url}" target="_blank" class="text-emerald-400">Öppna i ny flik</a></p>
             `;
             container.appendChild(card);
         });
@@ -160,7 +158,7 @@
         renderAirports(filtered);
     }
 
-    // Övriga funktioner
+    // Resten av funktionerna
     function showLogin() { document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('registerForm').classList.add('hidden'); }
     function showRegister() { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.remove('hidden'); }
 
@@ -213,7 +211,6 @@
         });
     }
 
-    // Start
     showLogin();
     window.onload = () => renderAirports(airports);
 </script>
