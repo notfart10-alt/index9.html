@@ -8,7 +8,7 @@
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
         .nav-btn { transition: all 0.2s; }
-        iframe { border-radius: 12px; border: 1px solid #27272a; }
+        iframe { border-radius: 12px; border: 1px solid #27272a; min-height: 520px; }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100" data-theme="emerald">
@@ -68,24 +68,18 @@
                     <iframe id="mapFrame" src="https://globe.adsbexchange.com/" class="w-full h-[85vh]"></iframe>
                 </div>
 
-                <!-- Avg & Dep -->
+                <!-- Avgångar & Ankomster med Iframes + Sök -->
                 <div id="arrdep" class="page hidden">
-                    <h2 class="text-3xl font-bold mb-6">Avgångar & Ankomster</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-zinc-900 p-6 rounded-3xl">
-                            <h3 class="text-xl mb-4">Stockholm Arlanda (ESSA)</h3>
-                            <a href="https://www.flightaware.com/live/airport/ESSA" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
-                        </div>
-                        <div class="bg-zinc-900 p-6 rounded-3xl">
-                            <h3 class="text-xl mb-4">Göteborg Landvetter (ESGG)</h3>
-                            <a href="https://www.flightaware.com/live/airport/ESGG" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
-                        </div>
-                        <div class="bg-zinc-900 p-6 rounded-3xl">
-                            <h3 class="text-xl mb-4">Örebro (ESOE)</h3>
-                            <a href="https://www.flightaware.com/live/airport/ESOE" target="_blank" class="block text-emerald-400 hover:underline">Öppna i ny flik →</a>
-                        </div>
+                    <h2 class="text-3xl font-bold mb-4">Avgångar & Ankomster</h2>
+                    
+                    <input type="text" id="airportSearch" 
+                           onkeyup="filterAirports()" 
+                           placeholder="Sök flygplats (Arlanda, ESSA, Örebro...)" 
+                           class="w-full p-4 bg-zinc-800 rounded-2xl mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+
+                    <div id="airportList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Fylls med JavaScript -->
                     </div>
-                    <p class="text-zinc-500 mt-6">Många flygplatssidor blockerar inbäddning. Därför öppnas de i ny flik.</p>
                 </div>
 
                 <div id="atc" class="page hidden">
@@ -105,6 +99,8 @@
                             <h3 class="text-xl mb-3">Kartkälla</h3>
                             <select id="mapSelect" onchange="changeMap()" class="w-full p-4 bg-zinc-800 rounded-2xl">
                                 <option value="https://globe.adsbexchange.com/">ADS-B Exchange</option>
+                                <option value="https://www.adsb.fi/">ADS-B.fi</option>
+                                <option value="https://live.skyvector.com/">SkyVector</option>
                             </select>
                         </div>
 
@@ -130,6 +126,41 @@
     </div>
 
 <script>
+    const airports = [
+        { name: "Stockholm Arlanda", code: "ESSA", url: "https://www.flightaware.com/live/airport/ESSA" },
+        { name: "Göteborg Landvetter", code: "ESGG", url: "https://www.flightaware.com/live/airport/ESGG" },
+        { name: "Malmö Sturup", code: "ESMS", url: "https://www.flightaware.com/live/airport/ESMS" },
+        { name: "Örebro", code: "ESOE", url: "https://www.flightaware.com/live/airport/ESOE" },
+        { name: "Stockholm Skavsta", code: "ESKN", url: "https://www.flightaware.com/live/airport/ESKN" },
+        { name: "Stockholm Bromma", code: "ESSB", url: "https://www.flightaware.com/live/airport/ESSB" },
+        { name: "Umeå", code: "ESNU", url: "https://www.flightaware.com/live/airport/ESNU" },
+        { name: "Luleå", code: "ESPA", url: "https://www.flightaware.com/live/airport/ESPA" }
+    ];
+
+    function renderAirports(filtered) {
+        const container = document.getElementById('airportList');
+        container.innerHTML = '';
+
+        filtered.forEach(ap => {
+            const card = document.createElement('div');
+            card.className = "bg-zinc-900 p-6 rounded-3xl";
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold mb-4">${ap.name} (${ap.code})</h3>
+                <iframe src="${ap.url}" class="w-full"></iframe>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function filterAirports() {
+        const term = document.getElementById('airportSearch').value.toLowerCase();
+        const filtered = airports.filter(a => 
+            a.name.toLowerCase().includes(term) || a.code.toLowerCase().includes(term)
+        );
+        renderAirports(filtered);
+    }
+
+    // Övriga funktioner
     function showLogin() { document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('registerForm').classList.add('hidden'); }
     function showRegister() { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.remove('hidden'); }
 
@@ -163,6 +194,7 @@
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById(page).classList.remove('hidden');
+        if (page === 'arrdep') filterAirports();
     }
 
     function changeMap() {
@@ -181,7 +213,9 @@
         });
     }
 
+    // Start
     showLogin();
+    window.onload = () => renderAirports(airports);
 </script>
 
 </body>
